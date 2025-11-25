@@ -11,6 +11,8 @@ import { Renderer } from './renderer.js';
 import { Effects } from './effects.js';
 import { createUI } from './ui.js';
 import { DEFAULT_CAMERA_POSITION, DEFAULT_CAMERA_CENTER, DEFAULT_CONTROL_MODE } from './sceneConfig.js';
+import { initSceneTime, updateSceneTime } from './time.js';
+import { Sunrise } from './sunrise.js';
 
 var glContext;
 var shaderProgram;
@@ -25,6 +27,7 @@ var keys = {};
 var renderer;
 var effects;
 var ui;
+var sunrise;
 
 // Coordinate axes visualization
 var axesHelper = null;
@@ -34,6 +37,8 @@ window.addEventListener('load', initializeApplication);
 function initializeApplication() {
   initWebGL();
   initCoreSystems().then(function() {
+    // Start scene time so sunrise can run 30s then stop
+    initSceneTime(performance.now());
     initSceneContent();
     // Initialize UI after core systems so callbacks are ready
     ui = createUI({
@@ -90,12 +95,21 @@ function animate(currentTime) {
   var deltaTime = previousFrameTime === 0 ? 0 : (currentTime - previousFrameTime) / 1000;
   previousFrameTime = currentTime;
 
+  // Advance scene time (clamped at 30s)
+  updateSceneTime(currentTime);
+
   updateCameraByKeys(deltaTime);
 
   if (!shaderProgram) return;
   renderer.useProgram(shaderProgram);
-  // Deep blue pre-dawn sky
-  renderer.beginFrame(0.12, 0.14, 0.22, 1.0);
+  // Dynamic sky during sunrise
+  if (sunrise) {
+    const sky = sunrise.getSkyColor();
+    renderer.beginFrame(sky[0], sky[1], sky[2], 1.0);
+    sunrise.update();
+  } else {
+    renderer.beginFrame(0.12, 0.14, 0.22, 1.0);
+  }
   renderer.setCamera(camera);
   // Update scene effects (fog fade, time uniform, lamptree flicker)
   effects.update(currentTime);
@@ -138,6 +152,7 @@ function initCoreSystems() {
     renderer.initializeDefaultState();
     renderer.useProgram(shaderProgram);
     effects = new Effects(glContext, shaderProgram);
+    sunrise = new Sunrise(glContext, shaderProgram);
 
     camera = new Camera([0, 0, 0], [0, 0, 0], [0, 1, 0]);
 
