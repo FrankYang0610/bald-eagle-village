@@ -27,12 +27,11 @@ export class Sunrise {
   }
 
   getSkyColor() {
-    // 4-stop gradient: deep blue -> purple -> orange -> light blue
+    // 3-stop gradient: deep blue -> purple -> light blue
     const t = getSunriseProgress();
     const stops = [
       { t: 0.00, c: [0.12, 0.14, 0.22] }, // deep blue
       { t: 0.33, c: [0.22, 0.18, 0.28] }, // purple
-      { t: 0.66, c: [0.95, 0.53, 0.15] }, // orange glow
       { t: 1.00, c: [0.62, 0.78, 0.92] }  // morning light blue
     ];
     let i = 0;
