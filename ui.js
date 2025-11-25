@@ -1,16 +1,24 @@
 // ui.js
 
 import { Vec3 } from './math.js';
+import { getSceneTimeSeconds, getSunriseDurationSeconds, isPaused, getTimeScale } from './time.js';
 
 export function createUI(options) {
   const getControlMode = options && options.getControlMode;
   const setControlMode = options && options.setControlMode;
   const resetCamera = options && options.resetCamera;
   const onFogReload = options && options.onFogReload;
+  const onTimeReset = options && options.onTimeReset;
+  const onPauseToggle = options && options.onPauseToggle;
+  const onSpeedToggle = options && options.onSpeedToggle;
 
   const cameraInfoEl = document.getElementById('camera-info');
   const cameraModeBoxEl = document.getElementById('camera-mode-box');
   const fogReloadBtn = document.getElementById('fog-reload-btn');
+  const clockEl = document.getElementById('clock-now');
+  const timeResetBtn = document.getElementById('time-reset-btn');
+  const pauseToggleBtn = document.getElementById('pause-toggle-btn');
+  const speedToggleBtn = document.getElementById('speed-toggle-btn');
 
   function updateCameraInfo(camera) {
     if (!cameraInfoEl || !camera) return;
@@ -25,6 +33,30 @@ export function createUI(options) {
     const label = (mode === 'fixed') ? 'Fixed-Position Camera' : 'User-Controlled Camera';
     cameraModeBoxEl.textContent = 'Current mode: ' + label;
   }
+
+  function updateClockNow() {
+    if (!clockEl) return;
+    const t = getSceneTimeSeconds();
+    const dur = getSunriseDurationSeconds();
+    clockEl.textContent = 'Animation Time: ' + t.toFixed(1) + 's / ' + dur.toFixed(0) + 's';
+  }
+  function updateTransportButtons() {
+    if (pauseToggleBtn) {
+      pauseToggleBtn.textContent = isPaused() ? 'Play' : 'Pause';
+    }
+    if (speedToggleBtn) {
+      const fast = getTimeScale() > 1.0;
+      speedToggleBtn.textContent = fast ? 'Normal speed' : 'Fast-forward';
+    }
+  }
+
+  // Start clock when present
+  if (clockEl) {
+    updateClockNow();
+    setInterval(updateClockNow, 100);
+  }
+  // Initialize transport button labels
+  updateTransportButtons();
 
   // Bind click on camera mode box to toggle modes
   if (cameraModeBoxEl && setControlMode) {
@@ -55,6 +87,28 @@ export function createUI(options) {
   if (fogReloadBtn && typeof onFogReload === 'function') {
     fogReloadBtn.addEventListener('click', () => {
       onFogReload();
+    });
+  }
+  // Bind time reset
+  if (timeResetBtn && typeof onTimeReset === 'function') {
+    timeResetBtn.addEventListener('click', () => {
+      onTimeReset();
+      updateTransportButtons();
+      updateClockNow();
+    });
+  }
+  // Bind pause toggle
+  if (pauseToggleBtn && typeof onPauseToggle === 'function') {
+    pauseToggleBtn.addEventListener('click', () => {
+      onPauseToggle();
+      updateTransportButtons();
+    });
+  }
+  // Bind speed toggle
+  if (speedToggleBtn && typeof onSpeedToggle === 'function') {
+    speedToggleBtn.addEventListener('click', () => {
+      onSpeedToggle();
+      updateTransportButtons();
     });
   }
 

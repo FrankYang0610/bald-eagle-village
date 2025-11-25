@@ -11,7 +11,7 @@ import { Renderer } from './renderer.js';
 import { Effects } from './effects.js';
 import { createUI } from './ui.js';
 import { DEFAULT_CAMERA_POSITION, DEFAULT_CAMERA_CENTER, DEFAULT_CONTROL_MODE } from './sceneConfig.js';
-import { initSceneTime, updateSceneTime } from './time.js';
+import { initSceneTime, updateSceneTime, togglePaused, toggleFastForward, resetGlobalTimeToZero } from './time.js';
 import { Sunrise } from './sunrise.js';
 
 var glContext;
@@ -22,7 +22,6 @@ var houseModel;
 var lamptreeModel;
 var lamptreeScale = 5.0;
 var glCanvas;
-var previousFrameTime = 0;
 var keys = {};
 var renderer;
 var effects;
@@ -47,6 +46,16 @@ function initializeApplication() {
       resetCamera: resetCameraToPreset,
       onFogReload: function() {
         if (effects) effects.reloadFog(performance.now());
+      },
+      onTimeReset: function() {
+        resetGlobalTimeToZero(performance.now());
+        if (effects) effects.reloadFog(performance.now());
+      },
+      onPauseToggle: function() {
+        togglePaused();
+      },
+      onSpeedToggle: function() {
+        toggleFastForward();
       }
     });
     ui.updateCameraModeBox();
@@ -92,11 +101,8 @@ function resetCameraToPreset() {
 }
 
 function animate(currentTime) {
-  var deltaTime = previousFrameTime === 0 ? 0 : (currentTime - previousFrameTime) / 1000;
-  previousFrameTime = currentTime;
-
-  // Advance scene time (clamped at 30s)
-  updateSceneTime(currentTime);
+  // Advance all timelines (pause/speed applied); returns scaled delta seconds
+  var deltaTime = updateSceneTime(currentTime) || 0;
 
   updateCameraByKeys(deltaTime);
 

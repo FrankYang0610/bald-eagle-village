@@ -59,8 +59,55 @@ canvas {
   font-size: 12px;
   z-index: 20;
 }
+#time-reset-btn,
+#pause-toggle-btn,
+#speed-toggle-btn {
+  position: absolute;
+  left: 8px;
+  bottom: 36px;
+  padding: 8px 10px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: Menlo, Consolas, monospace;
+  font-size: 12px;
+  z-index: 20;
+}
 #fog-reload-btn:hover {
   background: rgba(0, 0, 0, 0.7);
+}
+#time-reset-btn:hover,
+#pause-toggle-btn:hover,
+#speed-toggle-btn:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+#control-row {
+  position: absolute;
+  left: 8px;
+  bottom: 36px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 20;
+}
+#control-row #fog-reload-btn,
+#control-row #time-reset-btn,
+#control-row #pause-toggle-btn,
+#control-row #speed-toggle-btn {
+  position: static;
+  left: auto;
+  bottom: auto;
+}
+#clock-now {
+  padding: 6px 8px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  font-family: Menlo, Consolas, monospace;
+  font-size: 12px;
 }
 #camera-mode-hint {
   position: absolute;

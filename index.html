@@ -14,7 +14,13 @@
     <div id="label-origin" class="axis-label origin">O</div>
   </div>
   <div id="camera-info" aria-live="off"></div>
-  <button id="fog-reload-btn" type="button">Reload fog</button>
+  <div id="control-row">
+    <span id="clock-now" aria-live="off"></span>
+    <button id="time-reset-btn" type="button">Reset to t=0</button>
+    <button id="pause-toggle-btn" type="button">Pause</button>
+    <button id="speed-toggle-btn" type="button">Fast-forward</button>
+    <button id="fog-reload-btn" type="button">Reload fog</button>
+  </div>
   <div id="camera-mode-hint">
     <span id="camera-mode-box">Current mode: Fixed-Position Camera</span>
     <span>Press 1: Fixed-Position Camera | Press 2: User-Controlled Camera</span>
