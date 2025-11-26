@@ -31,6 +31,10 @@ var sunrise;
 // Coordinate axes visualization
 var axesHelper = null;
 
+// Camera time: unscaled delta (independent of pause/time scale)
+var lastUnscaledTimeMs = 0;
+var unscaledTimeInitialized = false;
+
 window.addEventListener('load', initializeApplication);
 
 function initializeApplication() {
@@ -101,10 +105,17 @@ function resetCameraToPreset() {
 }
 
 function animate(currentTime) {
+  if (!unscaledTimeInitialized) {
+    unscaledTimeInitialized = true;
+    lastUnscaledTimeMs = currentTime;
+  }
+  var unscaledDeltaSeconds = Math.max(0, (currentTime - lastUnscaledTimeMs) * 0.001);
+  lastUnscaledTimeMs = currentTime;
+
   // Advance all timelines (pause/speed applied); returns scaled delta seconds
   var deltaTime = updateSceneTime(currentTime) || 0;
 
-  updateCameraByKeys(deltaTime);
+  updateCameraByKeys(unscaledDeltaSeconds);
 
   if (!shaderProgram) return;
   renderer.useProgram(shaderProgram);
