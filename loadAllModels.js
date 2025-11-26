@@ -7,9 +7,8 @@ import { TextureUtils } from './texture.js';
 export function loadAllModels(gl) {
   // Ground
   const groundModel = new Model(gl);
-  const groundPromise = groundModel.loadFromUrl('assets/grass/grass.obj').then(() => {
-    // const tex = TextureUtils.loadTexture(gl, 'assets/Grass004_4K-JPG/Grass004_4K_Color.jpg');
-    // groundModel.setTexture(tex);
+  const groundPromise = groundModel.loadFromUrl('assets/terrain/terrain.obj').then(() => {
+    // TODO: texture
   });
 
   // House

@@ -11,7 +11,7 @@ export class Camera {
     
     // Height constraints
     this.minHeight = 0.1; // Minimum height to prevent going underground
-    this.maxHeight = 75; // Maximum height
+    this.maxHeight = 200; // Maximum height
     
     this.updateViewMatrix();
   }
