@@ -32,9 +32,18 @@ export function loadAllModels(gl) {
 
   // Bald Eagle
   const baldEagleModel = new Model(gl);
-  const baldEaglePromise = baldEagleModel.loadFromUrl('assets/bald-eagle/bald-eagle-1m-center-decimate-0dot01.obj').then(() => {
-    // TODO: texture
-  });
+  const baldEaglePromise = baldEagleModel
+    .loadFromUrl('assets/bald-eagle/bald-eagle-1m-center-decimate-0dot1-beak-head-body-eye-pupil-socket.obj')
+    .then(() => {
+      // Assign solid colors by group name
+      baldEagleModel.setMaterialColor('beak', [1.0, 1.0, 0.0]);         // pure yellow
+      baldEagleModel.setMaterialColor('head', [1.0, 1.0, 1.0]);         // pure white (head)
+      baldEagleModel.setMaterialColor('body', [0.45, 0.38, 0.32]);      // gray-brown
+      // Eyes
+      baldEagleModel.setMaterialColor('pupils', [0.0, 0.0, 0.0]);       // black
+      baldEagleModel.setMaterialColor('eye', [1.0, 1.0, 1.0]);          // white
+      baldEagleModel.setMaterialColor('eye-socket', [0.0, 0.0, 0.0]);   // black
+    });
 
   const allLoaded = Promise.all([groundPromise, housePromise, lamptreePromise, baldEaglePromise]);
 

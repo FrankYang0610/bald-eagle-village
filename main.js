@@ -203,6 +203,6 @@ function initSceneContent() {
     rebuildScenePointLightsForLamptrees(sceneObjects, lamptreeModel);
 
     // Add bald eagle at (0, 50, 0)
-    addSceneObject(baldEagleModel, [0, 80, 0], Math.PI, 100, [1.0, 1.0, 1.0], true);
+    addSceneObject(baldEagleModel, [0, 50, 0], Math.PI, 50, [1.0, 1.0, 1.0], true);
   });
 }

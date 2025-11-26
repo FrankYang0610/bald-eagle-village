@@ -16,6 +16,7 @@ export class Model {
     // Textures
     this.texture = null;            // global fallback texture
     this.materialTextures = {};     // materialName -> texture
+    this.materialColors = {};       // materialName -> [r,g,b]
 
     // Bounding box
     this.boundingBox = { min: [0, 0, 0], max: [0, 0, 0] };
@@ -130,6 +131,16 @@ export class Model {
     this.materialTextures[materialName] = texture;
   }
 
+  setMaterialColor(materialName, colorRgb) {
+    // colorRgb expected as [r,g,b] in 0..1
+    if (!colorRgb || colorRgb.length !== 3) return;
+    this.materialColors[materialName] = [
+      Math.max(0, Math.min(1, colorRgb[0])),
+      Math.max(0, Math.min(1, colorRgb[1])),
+      Math.max(0, Math.min(1, colorRgb[2]))
+    ];
+  }
+
   // Render all material meshes
   render(shaderProgram, modelMatrix, color) {
     if (!this.loaded) return;
@@ -173,7 +184,12 @@ export class Model {
         gl.uniform3fv(uniforms.uColor, new Float32Array([1.0, 1.0, 1.0]));
       } else {
         gl.uniform1i(uniforms.uUseTexture, 0);
-        gl.uniform3fv(uniforms.uColor, baseColor);
+        const matColor = this.materialColors[matName];
+        if (matColor) {
+          gl.uniform3fv(uniforms.uColor, new Float32Array(matColor));
+        } else {
+          gl.uniform3fv(uniforms.uColor, baseColor);
+        }
       }
 
       gl.drawArrays(gl.TRIANGLES, 0, mesh.vertexCount);

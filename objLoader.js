@@ -19,6 +19,11 @@ export function parseOBJ(objFileContent) {
 
   // Track current material; if no usemtl appears, everything goes into "default"
   var currentMaterial = "default";
+  // Segmentation mode:
+  //  - null: unknown yet
+  //  - "usemtl": split by materials
+  //  - "group": split by object/group names ('o' / 'g')
+  var segmentationMode = null;
   meshes[currentMaterial] = {
     positions: [],
     normals: [],
@@ -58,15 +63,35 @@ export function parseOBJ(objFileContent) {
     }
     // Material change
     else if (command === 'usemtl') {
-      currentMaterial = tokens[1];
+      // Prefer material-based segmentation when available
+      if (segmentationMode === null) segmentationMode = "usemtl";
+      if (segmentationMode === "usemtl") {
+        currentMaterial = tokens[1];
 
-      if (!meshes[currentMaterial]) {
-        meshes[currentMaterial] = {
-          positions: [],
-          normals: [],
-          texCoords: [],
-          vertexCount: 0
-        };
+        if (!meshes[currentMaterial]) {
+          meshes[currentMaterial] = {
+            positions: [],
+            normals: [],
+            texCoords: [],
+            vertexCount: 0
+          };
+        }
+      }
+    }
+    // Object/group change: used when no materials are specified
+    else if (command === 'o' || command === 'g') {
+      if (segmentationMode === null) segmentationMode = "group";
+      if (segmentationMode === "group") {
+        var groupName = tokens[1] || "default";
+        currentMaterial = groupName;
+        if (!meshes[currentMaterial]) {
+          meshes[currentMaterial] = {
+            positions: [],
+            normals: [],
+            texCoords: [],
+            vertexCount: 0
+          };
+        }
       }
     }
     // Faces
@@ -132,7 +157,7 @@ export function parseOBJ(objFileContent) {
         }
       }
     }
-    // Ignore "o", "g" and other commands
+    // Ignore other commands
   }
 
   // Convert all per-material arrays to Float32Array
