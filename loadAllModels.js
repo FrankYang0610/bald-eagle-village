@@ -33,15 +33,17 @@ export function loadAllModels(gl) {
   // Bald Eagle
   const baldEagleModel = new Model(gl);
   const baldEaglePromise = baldEagleModel
-    .loadFromUrl('assets/bald-eagle/bald-eagle-1m-center-decimate-0dot1-beak-head-body-eye-pupil-socket.obj')
+    .loadFromUrl('assets/bald-eagle-three-parts/bald-eagle-three-parts.obj')
     .then(() => {
       // Assign solid colors by group name
+      const bodyColor = [0.45, 0.38, 0.32];
+      baldEagleModel.setMaterialColor('body', bodyColor);                        // gray-brown
+      baldEagleModel.setMaterialColor('left-wing', bodyColor);                   // same as body
+      baldEagleModel.setMaterialColor('right-wing', bodyColor);                  // same as body
       baldEagleModel.setMaterialColor('beak', [1.0, 1.0, 0.0]);         // pure yellow
       baldEagleModel.setMaterialColor('head', [1.0, 1.0, 1.0]);         // pure white (head)
-      baldEagleModel.setMaterialColor('body', [0.45, 0.38, 0.32]);      // gray-brown
-      // Eyes
+      baldEagleModel.setMaterialColor('eyes', [1.0, 1.0, 1.0]);         // white
       baldEagleModel.setMaterialColor('pupils', [0.0, 0.0, 0.0]);       // black
-      baldEagleModel.setMaterialColor('eye', [1.0, 1.0, 1.0]);          // white
       baldEagleModel.setMaterialColor('eye-socket', [0.0, 0.0, 0.0]);   // black
     });
 

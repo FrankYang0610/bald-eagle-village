@@ -13,6 +13,7 @@ import { createUI } from './ui.js';
 import { DEFAULT_CAMERA_POSITION, DEFAULT_CAMERA_CENTER, DEFAULT_CONTROL_MODE } from './sceneConfig.js';
 import { initSceneTime, updateSceneTime, togglePaused, toggleFastForward, resetGlobalTimeToZero } from './time.js';
 import { Sunrise } from './sunrise.js';
+import { createAnimatedBaldEagle } from './baldEagle.js';
 
 var glContext;
 var shaderProgram;
@@ -28,6 +29,7 @@ var renderer;
 var effects;
 var ui;
 var sunrise;
+var animatedBaldEagle;
 
 // Coordinate axes visualization
 var axesHelper = null;
@@ -202,7 +204,13 @@ function initSceneContent() {
     buildVillage(sceneObjects, groundModel, houseModel, lamptreeModel, lamptreeScale);
     rebuildScenePointLightsForLamptrees(sceneObjects, lamptreeModel);
 
-    // Add bald eagle at (0, 50, 0)
-    addSceneObject(baldEagleModel, [0, 50, 0], Math.PI, 50, [1.0, 1.0, 1.0], true);
+    // Animated bald eagle at (0, 50, 0)
+    animatedBaldEagle = createAnimatedBaldEagle(baldEagleModel, {
+      position: [0, 50, 0],
+      rotationY: Math.PI,
+      scale: 20,
+      color: [1.0, 1.0, 1.0]
+    });
+    sceneObjects.push(animatedBaldEagle);
   });
 }

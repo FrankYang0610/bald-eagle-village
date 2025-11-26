@@ -195,5 +195,58 @@ export class Model {
       gl.drawArrays(gl.TRIANGLES, 0, mesh.vertexCount);
     }
   }
+
+  // Render only specified material/group names
+  renderOnly(shaderProgram, modelMatrix, color, names) {
+    if (!this.loaded) return;
+    if (!names) return;
+
+    const gl = this.gl;
+    const attribs = shaderProgram.attributeLocations;
+    const uniforms = shaderProgram.uniformLocations;
+
+    gl.uniformMatrix4fv(uniforms.uModel, false, modelMatrix);
+
+    const baseColor = color || new Float32Array([1.0, 1.0, 1.0]);
+    const include = new Set(Array.isArray(names) ? names : [names]);
+
+    for (const matName in this.meshes) {
+      if (!Object.prototype.hasOwnProperty.call(this.meshes, matName)) continue;
+      if (!include.has(matName)) continue;
+
+      const mesh = this.meshes[matName];
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, mesh.positionBuffer);
+      gl.enableVertexAttribArray(attribs.aPosition);
+      gl.vertexAttribPointer(attribs.aPosition, 3, gl.FLOAT, false, 0, 0);
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, mesh.normalBuffer);
+      gl.enableVertexAttribArray(attribs.aNormal);
+      gl.vertexAttribPointer(attribs.aNormal, 3, gl.FLOAT, false, 0, 0);
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, mesh.texCoordBuffer);
+      gl.enableVertexAttribArray(attribs.aTexCoord);
+      gl.vertexAttribPointer(attribs.aTexCoord, 2, gl.FLOAT, false, 0, 0);
+
+      const tex = this.materialTextures[matName] || this.texture;
+      if (tex) {
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, tex);
+        gl.uniform1i(uniforms.uTexture, 0);
+        gl.uniform1i(uniforms.uUseTexture, 1);
+        gl.uniform3fv(uniforms.uColor, new Float32Array([1.0, 1.0, 1.0]));
+      } else {
+        gl.uniform1i(uniforms.uUseTexture, 0);
+        const matColor = this.materialColors[matName];
+        if (matColor) {
+          gl.uniform3fv(uniforms.uColor, new Float32Array(matColor));
+        } else {
+          gl.uniform3fv(uniforms.uColor, baseColor);
+        }
+      }
+
+      gl.drawArrays(gl.TRIANGLES, 0, mesh.vertexCount);
+    }
+  }
 }
 
