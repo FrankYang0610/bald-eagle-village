@@ -6,8 +6,8 @@ import { TextureUtils } from './texture.js';
 
 export function loadAllModels(gl) {
   // Ground
-  const groundModel = new Model(gl);
-  const groundPromise = groundModel.loadFromUrl('assets/terrain/terrain.obj').then(() => {
+  const terrainModel = new Model(gl);
+  const terrainPromise = terrainModel.loadFromUrl('assets/terrain/terrain.obj').then(() => {
     // TODO: texture
   });
 
@@ -47,10 +47,10 @@ export function loadAllModels(gl) {
       baldEagleModel.setMaterialColor('eye-socket', [0.0, 0.0, 0.0]);   // black
     });
 
-  const allLoaded = Promise.all([groundPromise, housePromise, lamptreePromise, baldEaglePromise]);
+  const allLoaded = Promise.all([terrainPromise, housePromise, lamptreePromise, baldEaglePromise]);
 
   return {
-    groundModel,
+    terrainModel,
     houseModel,
     lamptreeModel,
     baldEagleModel,

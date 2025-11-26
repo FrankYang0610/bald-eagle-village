@@ -1,9 +1,9 @@
 import { addSceneObject } from './scene.js';
 
-export function buildVillage(sceneObjects, groundModel, houseModel, lamptreeModel, lamptreeScale = 5.0) {
+export function buildVillage(sceneObjects, terrainModel, houseModel, lamptreeModel, lamptreeScale = 5.0) {
   // Terrain (single large terrain model instead of tiled grass)
   addSceneObject(
-    groundModel,
+    terrainModel,
     [0, 0, 0],
     0,
     20,

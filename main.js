@@ -18,7 +18,7 @@ import { createAnimatedBaldEagle } from './baldEagle.js';
 var glContext;
 var shaderProgram;
 var camera;
-var groundModel;
+var terrainModel;
 var houseModel;
 var lamptreeModel;
 var baldEagleModel;
@@ -193,7 +193,7 @@ function initCoreSystems() {
 
 function initSceneContent() {
   var loaded = loadAllModels(glContext);
-  groundModel = loaded.groundModel;
+  terrainModel = loaded.terrainModel;
   houseModel = loaded.houseModel;
   lamptreeModel = loaded.lamptreeModel;
   baldEagleModel = loaded.baldEagleModel;
@@ -201,7 +201,7 @@ function initSceneContent() {
   initLighting(glContext, shaderProgram);
 
   loaded.allLoaded.then(function() {
-    buildVillage(sceneObjects, groundModel, houseModel, lamptreeModel, lamptreeScale);
+    buildVillage(sceneObjects, terrainModel, houseModel, lamptreeModel, lamptreeScale);
     rebuildScenePointLightsForLamptrees(sceneObjects, lamptreeModel);
 
     // Animated bald eagle at (0, 50, 0)
