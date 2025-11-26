@@ -1,4 +1,5 @@
 import { parseOBJ } from './objLoader.js';
+import { classifyTerrainMeshes } from './terrainClassifier.js';
 
 export class Model {
   constructor(gl) {
@@ -34,7 +35,11 @@ export class Model {
         return res.text();
       })
       .then(objFileContent => {
-        const parsedMeshes = parseOBJ(objFileContent);
+        let parsedMeshes = parseOBJ(objFileContent);
+        // terrain split: group triangles into 'water' (y<0) and 'land' (y>=0)
+        if (url && typeof url === 'string' && url.toLowerCase().includes('/terrain/')) {
+          parsedMeshes = classifyTerrainMeshes(parsedMeshes, 0);
+        }
         this.bufferData(parsedMeshes);
         this.loaded = true;
       })
