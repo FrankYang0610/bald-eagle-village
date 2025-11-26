@@ -20,6 +20,7 @@ var camera;
 var groundModel;
 var houseModel;
 var lamptreeModel;
+var baldEagleModel;
 var lamptreeScale = 5.0;
 var glCanvas;
 var keys = {};
@@ -193,11 +194,15 @@ function initSceneContent() {
   groundModel = loaded.groundModel;
   houseModel = loaded.houseModel;
   lamptreeModel = loaded.lamptreeModel;
+  baldEagleModel = loaded.baldEagleModel;
 
   initLighting(glContext, shaderProgram);
 
   loaded.allLoaded.then(function() {
     buildVillage(sceneObjects, groundModel, houseModel, lamptreeModel, lamptreeScale);
     rebuildScenePointLightsForLamptrees(sceneObjects, lamptreeModel);
+
+    // Add bald eagle at (0, 50, 0)
+    addSceneObject(baldEagleModel, [0, 80, 0], Math.PI, 100, [1.0, 1.0, 1.0], true);
   });
 }

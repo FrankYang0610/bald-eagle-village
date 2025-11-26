@@ -30,12 +30,19 @@ export function loadAllModels(gl) {
     lamptreeModel.setTexture(woodTex);
   });
 
-  const allLoaded = Promise.all([groundPromise, housePromise, lamptreePromise]);
+  // Bald Eagle
+  const baldEagleModel = new Model(gl);
+  const baldEaglePromise = baldEagleModel.loadFromUrl('assets/bald-eagle/bald-eagle-1m-center-decimate-0dot01.obj').then(() => {
+    // TODO: texture
+  });
+
+  const allLoaded = Promise.all([groundPromise, housePromise, lamptreePromise, baldEaglePromise]);
 
   return {
     groundModel,
     houseModel,
     lamptreeModel,
+    baldEagleModel,
     allLoaded
   };
 }
