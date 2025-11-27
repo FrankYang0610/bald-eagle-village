@@ -8,9 +8,10 @@ export function loadAllModels(gl) {
   // Ground
   const terrainModel = new Model(gl);
   const terrainPromise = terrainModel.loadFromUrl('assets/terrain/terrain.obj').then(() => {
-    // Color-code by height: water (y<0) blue, land (y>=0) green
+    // Color-code by height: water (y<0) blue, land (y>=0) green, snow gap (y>30) white
     terrainModel.setMaterialColor('water', [0.0, 0.0, 1.0]);
     terrainModel.setMaterialColor('land', [0.0, 1.0, 0.0]);
+    terrainModel.setMaterialColor('snow', [1.0, 1.0, 1.0]);
   });
 
   // House

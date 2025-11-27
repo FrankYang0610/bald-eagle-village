@@ -38,7 +38,7 @@ export class Model {
         let parsedMeshes = parseOBJ(objFileContent);
         // terrain split: group triangles into 'water' (y<0) and 'land' (y>=0)
         if (url && typeof url === 'string' && url.toLowerCase().includes('/terrain/')) {
-          parsedMeshes = classifyTerrainMeshes(parsedMeshes, 0);
+          parsedMeshes = classifyTerrainMeshes(parsedMeshes);
         }
         this.bufferData(parsedMeshes);
         this.loaded = true;

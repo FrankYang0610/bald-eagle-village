@@ -12,17 +12,17 @@ export function buildVillage(sceneObjects, terrainModel, houseModel, lamptreeMod
   );
 
   // Houses
-  addSceneObject(houseModel, [-70, 25, -80], 30, 1, [0.9, 0.3, 0.25], true);
-  addSceneObject(houseModel, [-70, 25, -50], 30, 1, [0.9, 0.3, 0.25], true);
-  addSceneObject(houseModel, [-70, 25, -20], 30, 1, [0.9, 0.3, 0.25], true);
+  addSceneObject(houseModel, [-90, 8, -50], 30, 1, [0.9, 0.3, 0.25], true);
+  addSceneObject(houseModel, [-95, 8, -20], 30, 1, [0.9, 0.3, 0.25], true);
+  addSceneObject(houseModel, [-100, 8, 10], 30, 1, [0.9, 0.3, 0.25], true);
 
-  addSceneObject(houseModel, [70, 25, 0], -30, 1, [0.9, 0.3, 0.25], true);
-  addSceneObject(houseModel, [70, 25, 30], -30, 1, [0.9, 0.3, 0.25], true);
-  addSceneObject(houseModel, [70, 25, 60], -30, 1, [0.9, 0.3, 0.25], true);
+  addSceneObject(houseModel, [130, 10, 0], -30, 1, [0.9, 0.3, 0.25], true);
+  addSceneObject(houseModel, [130, 10, 30], -30, 1, [0.9, 0.3, 0.25], true);
+  addSceneObject(houseModel, [130, 10, 60], -30, 1, [0.9, 0.3, 0.25], true);
 
-  // One lamptree at [-80, 25, -50]
-  addSceneObject(lamptreeModel, [-90, 28, -50], 0, lamptreeScale, [0.85, 0.85, 0.85], true);
-  addSceneObject(lamptreeModel, [120, 58, 45], 0, lamptreeScale, [0.85, 0.85, 0.85], true);
+  // Lamptrees
+  addSceneObject(lamptreeModel, [-110, 8, -20], 0, lamptreeScale, [0.85, 0.85, 0.85], true);
+  addSceneObject(lamptreeModel, [220, 33, 0], 0, lamptreeScale, [0.85, 0.85, 0.85], true);
 }
 
 

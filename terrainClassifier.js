@@ -1,13 +1,15 @@
 // terrainClassifier.js
-// Split terrain meshes into two groups based on vertex Y:
-// - "water": all three vertices of a triangle have y < 0
-// - "land": otherwise
+// Split terrain meshes into groups based on vertex Y:
+// - "water": all three vertices of a triangle have y < landWaterThresholdY = 0
+// - "snow":  all three vertices of a triangle have y > snowThresholdY
+// - "land":  otherwise
 //
 // Input: meshes = { name: { positions: Float32Array, normals: Float32Array, texCoords: Float32Array, vertexCount: number }, ... }
-// Output: { water: { ... }, land: { ... } }
-export function classifyTerrainMeshes(meshes, thresholdY = 0) {
+// Output: { water: { ... }, snow: { ... }, land: { ... } }
+export function classifyTerrainMeshes(meshes, landWaterThresholdY = 0, snowThresholdY = 4) {
   const accumulators = {
     water: { positions: [], normals: [], texCoords: [], vertexCount: 0 },
+    snow:  { positions: [], normals: [], texCoords: [], vertexCount: 0 },
     land:  { positions: [], normals: [], texCoords: [], vertexCount: 0 }
   };
 
@@ -27,8 +29,9 @@ export function classifyTerrainMeshes(meshes, thresholdY = 0) {
       const y1 = pos[baseP + 4];
       const y2 = pos[baseP + 7];
 
-      const isWater = (y0 < thresholdY) && (y1 < thresholdY) && (y2 < thresholdY);
-      const target = isWater ? accumulators.water : accumulators.land;
+      const isWater = (y0 < landWaterThresholdY) && (y1 < landWaterThresholdY) && (y2 < landWaterThresholdY);
+      const isSnow  = (y0 > snowThresholdY) && (y1 > snowThresholdY) && (y2 > snowThresholdY);
+      const target = isWater ? accumulators.water : (isSnow ? accumulators.snow : accumulators.land);
 
       // Positions (9 floats)
       target.positions.push(
@@ -61,6 +64,12 @@ export function classifyTerrainMeshes(meshes, thresholdY = 0) {
       normals: new Float32Array(accumulators.water.normals),
       texCoords: new Float32Array(accumulators.water.texCoords),
       vertexCount: accumulators.water.vertexCount
+    },
+    snow: {
+      positions: new Float32Array(accumulators.snow.positions),
+      normals: new Float32Array(accumulators.snow.normals),
+      texCoords: new Float32Array(accumulators.snow.texCoords),
+      vertexCount: accumulators.snow.vertexCount
     },
     land: {
       positions: new Float32Array(accumulators.land.positions),

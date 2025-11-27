@@ -204,7 +204,7 @@ function initSceneContent() {
     buildVillage(sceneObjects, terrainModel, houseModel, lamptreeModel, lamptreeScale);
     rebuildScenePointLightsForLamptrees(sceneObjects, lamptreeModel);
 
-    // Animated bald eagle at (0, 50, 0)
+    // Bald eagles
     animatedBaldEagle = createAnimatedBaldEagle(baldEagleModel, {
       position: [0, 50, 0],
       rotationY: Math.PI,
