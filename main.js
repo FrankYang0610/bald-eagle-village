@@ -11,9 +11,10 @@ import { Renderer } from './renderer.js';
 import { Effects } from './effects.js';
 import { createUI } from './ui.js';
 import { DEFAULT_CAMERA_POSITION, DEFAULT_CAMERA_CENTER, DEFAULT_CONTROL_MODE } from './sceneConfig.js';
-import { initSceneTime, updateSceneTime, togglePaused, toggleFastForward, resetGlobalTimeToZero } from './time.js';
+import { initSceneTime, updateSceneTime, togglePaused, toggleFastForward, resetGlobalTimeToZero, getGlobalTimeSeconds } from './time.js';
 import { Sunrise } from './sunrise.js';
 import { createAnimatedBaldEagle } from './baldEagle.js';
+import { WaterSystem } from './waterSystem.js';
 
 var glContext;
 var shaderProgram;
@@ -30,6 +31,7 @@ var effects;
 var ui;
 var sunrise;
 var animatedBaldEagle;
+var waterSystem = null;
 
 // Coordinate axes visualization
 var axesHelper = null;
@@ -140,6 +142,12 @@ function animate(currentTime) {
   // Render coordinate axes
   renderer.renderAxes(axesHelper, camera, glCanvas);
 
+  // Water pass (after terrain)
+  if (waterSystem) {
+    waterSystem.render(renderer, camera, { time: getGlobalTimeSeconds() });
+    renderer.useProgram(shaderProgram);
+  }
+
   if (ui) ui.updateCameraInfo(camera);
 
   requestAnimationFrame(animate);
@@ -173,6 +181,10 @@ function initCoreSystems() {
     renderer.useProgram(shaderProgram);
     effects = new Effects(glContext, shaderProgram);
     sunrise = new Sunrise(glContext, shaderProgram);
+
+    // Water system (loads its own program)
+    waterSystem = new WaterSystem(glContext, sunrise);
+    waterSystem.loadProgram();
 
     camera = new Camera([0, 0, 0], [0, 0, 0], [0, 1, 0]);
 
@@ -212,5 +224,10 @@ function initSceneContent() {
       color: [1.0, 1.0, 1.0]
     });
     sceneObjects.push(animatedBaldEagle);
+
+    // Water mesh covering terrain bounds on y=0
+    if (waterSystem) {
+      waterSystem.buildMeshFromTerrain(terrainModel, 20, 20);
+    }
   });
 }

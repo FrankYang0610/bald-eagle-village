@@ -55,7 +55,9 @@ export class ShaderProgram {
       // Fog
       'uFogColor', 'uFogDensity', 'uFogFade', 'uTime',
       'uFogBaseHeight', 'uFogHeightFalloff',
-      'uFogNoiseScale', 'uFogNoiseStrength', 'uFogWind'
+      'uFogNoiseScale', 'uFogNoiseStrength', 'uFogWind',
+      // Water-specific (safe to be null in other shaders)
+      'uWaterColor', 'uSkyColor', 'uWaveFreq', 'uWaveAmp', 'uWaveSpeed'
     ];
 
     uniforms.forEach(name => {
