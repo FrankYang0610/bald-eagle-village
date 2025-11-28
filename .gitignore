@@ -30,3 +30,9 @@ Thumbs.db
 
 # Report Drafts
 report-drafts/
+
+# Report for course submission
+report.pdf
+
+# Videos
+*.mov
