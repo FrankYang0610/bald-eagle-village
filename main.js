@@ -24,6 +24,7 @@ var terrainModel;
 var houseModel;
 var lamptreeModel;
 var baldEagleModel;
+var grassModel;
 var lamptreeScale = 5.0;
 var glCanvas;
 var keys = {};
@@ -210,13 +211,14 @@ function initSceneContent() {
   var loaded = loadAllModels(glContext);
   terrainModel = loaded.terrainModel;
   houseModel = loaded.houseModel;
+  grassModel = loaded.grassModel;
   lamptreeModel = loaded.lamptreeModel;
   baldEagleModel = loaded.baldEagleModel;
 
   initLighting(glContext, shaderProgram);
 
   loaded.allLoaded.then(function() {
-    buildVillage(sceneObjects, terrainModel, houseModel, lamptreeModel, lamptreeScale);
+    buildVillage(sceneObjects, terrainModel, houseModel, grassModel, lamptreeModel, lamptreeScale);
     rebuildScenePointLightsForLamptrees(sceneObjects, lamptreeModel);
 
     // Bald eagles: rewrite paths to A/B with specified waypoints
